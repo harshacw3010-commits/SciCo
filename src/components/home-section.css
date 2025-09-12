@@ -1,0 +1,297 @@
+.scico-home {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  /* Space-like ultra-dark gradient with minimal banding */
+  background:
+    /* subtle cyan edge glow */
+    radial-gradient(900px 520px at 8% 12%, rgba(34, 211, 238, 0.05), transparent 60%),
+    /* subtle fuchsia edge glow */
+    radial-gradient(900px 520px at 92% 88%, rgba(217, 70, 239, 0.04), transparent 60%),
+    /* base deep gradient */
+    linear-gradient(135deg,
+      #050510 0%,
+      #060814 22%,
+      #090D17 52%,
+      #0A0E17 76%,
+      #0B0F18 100%
+    );
+  overflow: hidden;
+}
+
+.scico-home__inner {
+  width: min(1200px, 92vw);
+  margin-inline: auto;
+}
+
+/* Brand wordmark (h1) just below the navbar */
+.brand-wordmark {
+  position: relative;
+  z-index: 5; /* above background effects */
+  margin-top: clamp(12px, 3.5vh, 28px);
+  margin-bottom: clamp(18px, 5vh, 40px);
+}
+
+.brand-wordmark__text {
+  margin: 0;
+  font-family: "Orbitron", "Rajdhani", "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 700; /* Orbitron Bold */
+  font-size: clamp(40px, 6.8vw, 98px);
+  line-height: 1.05;
+  letter-spacing: 0.03em; /* +3% tracking */
+  text-transform: uppercase;
+  /* Base color and subtle gradient fill */
+  color: #FFFFFF;
+  background: linear-gradient(180deg, #E0F7FF 0%, #22D3EE 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Futuristic dual-glow: cyan outer, magenta subtle */
+  text-shadow:
+    0 0 14px rgba(34, 211, 238, 0.35),
+    0 0 20px rgba(217, 70, 239, 0.18);
+  transition: transform 200ms ease-out, text-shadow 200ms ease-out;
+  will-change: transform, text-shadow;
+}
+
+/* Larger S and central C for symmetry */
+.brand-wordmark__letter { display: inline-block; }
+.brand-wordmark__letter--accent { font-size: 1.12em; }
+
+.brand-wordmark:hover .brand-wordmark__text,
+.brand-wordmark:focus-within .brand-wordmark__text {
+  transform: scale(1.03);
+  text-shadow:
+    0 0 16px rgba(34, 211, 238, 0.40), /* ~+15% intensity */
+    0 0 22px rgba(217, 70, 239, 0.21);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-wordmark__text { transition: text-shadow 180ms ease-out; }
+  .brand-wordmark:hover .brand-wordmark__text,
+  .brand-wordmark:focus-within .brand-wordmark__text { transform: none; }
+}
+
+/* Thin calligraphic underline as a gentle arc */
+.brand-wordmark__underline {
+  position: absolute;
+  left: 0;
+  bottom: -8px;
+  width: min(36ch, 42vw);
+  height: auto;
+  pointer-events: none;
+}
+
+/* Neon underline: cyan pulse left→right, slight blur */
+.brand-wordmark__underline-path {
+  filter: blur(4px);
+  stroke-dasharray: 60 240; /* sparse dash so the bright segment travels */
+  stroke-dashoffset: 0;
+  animation: underline-pulse 5.5s linear infinite;
+}
+
+@keyframes underline-pulse {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -300; } /* move left → right visually */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-wordmark__underline-path { animation: none; }
+}
+
+/* Top-right navigation */
+.scico-nav {
+  position: fixed;
+  top: 12px;
+  right: clamp(12px, 3vw, 28px);
+  z-index: 2000;
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 10px;
+  /* Match background to home section gradient to feel seamless */
+  background:
+    radial-gradient(900px 520px at 8% 12%, rgba(34, 211, 238, 0.05), transparent 60%),
+    radial-gradient(900px 520px at 92% 88%, rgba(217, 70, 239, 0.04), transparent 60%),
+    linear-gradient(135deg, #050510 0%, #060814 22%, #090D17 52%, #0A0E17 76%, #0B0F18 100%);
+  border-radius: 10px;
+  backdrop-filter: saturate(110%) blur(2px);
+}
+.scico-nav ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; }
+.scico-nav a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+.scico-nav a:hover {
+  color: #fff;
+  background: rgba(34, 211, 238, 0.08);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+}
+
+.scico-branding {
+  margin-top: 4.5rem;
+  margin-bottom: 1.25rem; /* give room before carousel */
+}
+
+.scico-logo {
+  font-family: "Poppins", "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 6vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow: 0 0 16px rgba(34, 211, 238, 0.55), 0 0 28px rgba(217, 70, 239, 0.35);
+  animation: scico-bounce 2s ease-in-out infinite;
+  display: inline-block;
+  will-change: transform, filter, text-shadow;
+  transition: transform 200ms ease, filter 180ms ease, text-shadow 180ms ease;
+  cursor: default;
+}
+
+.scico-logo:hover {
+  filter: brightness(1.25);
+  transform: translateY(-2px) scale(1.04);
+  text-shadow: 0 0 28px rgba(34, 211, 238, 0.9), 0 0 54px rgba(217, 70, 239, 0.7);
+}
+
+@keyframes scico-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scico-logo { animation: none; }
+}
+
+.scico-tagline {
+  margin-top: 0.75rem;
+  max-width: 60ch;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* 3D Carousel */
+.carousel {
+  position: relative;
+  height: clamp(200px, 35vh, 400px);
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  margin-top: 1.5rem;
+  transform: translateY(-2vh); /* pull carousel slightly upward so it's fully visible */
+}
+
+.carousel-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  transition: opacity 220ms ease, filter 220ms ease;
+}
+
+.carousel-item img {
+  width: clamp(140px, 20vw, 280px);
+  height: clamp(88px, 14vw, 160px);
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  transition: transform 300ms ease;
+}
+
+.carousel-item.front img {
+  box-shadow: 0 0 45px rgba(34, 211, 238, 0.35), 0 0 65px rgba(217, 70, 239, 0.25), 0 10px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* Grid fallback for reduced motion */
+.grid-fallback {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 2rem;
+}
+
+.grid-fallback .grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.grid-fallback .grid-item.front img {
+  outline: 3px solid rgba(34, 211, 238, 0.8);
+  box-shadow: 0 0 35px rgba(34, 211, 238, 0.35), 0 0 55px rgba(217, 70, 239, 0.25);
+}
+
+/* Single-image hero mode */
+.hero {
+  display: grid;
+  place-items: center;
+  margin-top: 1rem;
+  min-height: 70vh; /* assist vertical centering on shorter content */
+}
+
+/* Wrapper that controls responsive width, rounded corners, and glow */
+.hero-figure {
+  position: relative;
+  width: 68vw; /* Desktop target ~65–70% */
+  max-width: 1600px;
+  display: inline-block;
+  border-radius: 16px; /* rounded-xl vibe */
+}
+
+/* Soft cyan/fuchsia diffused glow that blends into background */
+.hero-figure::before {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  border-radius: inherit;
+  background:
+    radial-gradient(60% 60% at 25% 30%, rgba(34, 211, 238, 0.25), transparent 70%),
+    radial-gradient(60% 60% at 75% 70%, rgba(217, 70, 239, 0.20), transparent 72%);
+  filter: blur(48px);
+  opacity: 0.7;
+  z-index: 0; /* behind the image */
+  pointer-events: none;
+}
+
+.hero-figure img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto; /* maintain aspect ratio */
+  max-height: 70vh; /* Desktop max height */
+  object-fit: contain; /* prevent distortion */
+  border-radius: inherit;
+  /* Very soft outer ambient shadow to avoid hard outline */
+  box-shadow:
+    0 0 120px rgba(34, 211, 238, 0.08),
+    0 0 140px rgba(217, 70, 239, 0.07),
+    0 18px 55px rgba(0, 0, 0, 0.55);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .hero-figure { width: 80vw; }
+  .hero-figure img { max-height: 60vh; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .hero-figure { width: 90vw; }
+  .hero-figure img { max-height: none; }
+}
+
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .scico-branding { margin-top: 4rem; }
+  .scico-tagline { font-size: 0.95rem; }
+}

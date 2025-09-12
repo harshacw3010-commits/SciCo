@@ -1,0 +1,136 @@
+.image-swap-gallery {
+  position: relative;
+  width: 100%;
+  max-width: 760px; /* desktop target 680–760px */
+  margin-inline: auto; /* center in column */
+  aspect-ratio: 16 / 9;
+  border-radius: 16px; /* rounded-xl */
+  overflow: hidden;
+  /* Corner placement sizing (fits inside 16:9 without overlap) */
+  --tile-size: 26%; /* desktop ~26% of base width */
+  --gap: 12px;                  /* safe inset from edges */
+}
+
+/* Soft cyan/fuchsia diffused glow that blends into background */
+.image-swap-gallery::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border-radius: inherit;
+  background:
+    radial-gradient(60% 60% at 25% 30%, rgba(34, 211, 238, 0.22), transparent 70%),
+    radial-gradient(60% 60% at 75% 70%, rgba(217, 70, 239, 0.18), transparent 72%);
+  filter: blur(48px);
+  opacity: 0.7;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.image-swap-gallery > img,
+.image-swap-gallery .tiles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.image-swap-gallery > img.is-base {
+  z-index: 1;
+  opacity: 1;
+  border-radius: inherit;
+  object-fit: cover; /* maintain aspect, can crop */
+  transition: opacity 340ms ease;
+}
+
+/* Base image dims but remains visible on hover */
+.image-swap-gallery:hover > img.is-base,
+.image-swap-gallery:focus-within > img.is-base,
+.image-swap-gallery:focus > img.is-base {
+  opacity: 0.4;
+}
+
+/* Tiles overlay */
+.image-swap-gallery .tiles {
+  z-index: 2;
+  pointer-events: none; /* gallery hover only */
+}
+
+/* Tile base style: square centered, hidden initially */
+.image-swap-gallery .tile {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--tile-size);
+  aspect-ratio: 1 / 1; /* perfect square */
+  height: auto; /* ensure aspect-ratio controls height */
+  transform: translate(-50%, -50%) scale(0.85);
+  opacity: 0;
+  border-radius: inherit;
+  object-fit: cover;
+  will-change: transform, opacity;
+  transition: top 340ms ease-out, left 340ms ease-out, right 340ms ease-out, bottom 340ms ease-out, transform 340ms ease-out, opacity 340ms ease-out;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(34, 211, 238, 0.10),
+    0 0 80px rgba(217, 70, 239, 0.06);
+}
+
+/* Hover/focus: tiles move to corners and fade in */
+.image-swap-gallery:hover .tile,
+.image-swap-gallery:focus-within .tile,
+.image-swap-gallery:focus .tile {
+  opacity: 1;
+}
+/* Move to exact inner corners using positional anchors */
+.image-swap-gallery:hover .tile-tl,
+.image-swap-gallery:focus-within .tile-tl,
+.image-swap-gallery:focus .tile-tl { top: var(--gap); left: var(--gap); transform: none; opacity: 1; }
+.image-swap-gallery:hover .tile-tr,
+.image-swap-gallery:focus-within .tile-tr,
+.image-swap-gallery:focus .tile-tr { top: var(--gap); right: var(--gap); left: auto; transform: none; opacity: 1; }
+.image-swap-gallery:hover .tile-br,
+.image-swap-gallery:focus-within .tile-br,
+.image-swap-gallery:focus .tile-br { bottom: var(--gap); right: var(--gap); top: auto; left: auto; transform: none; opacity: 1; }
+.image-swap-gallery:hover .tile-bl,
+.image-swap-gallery:focus-within .tile-bl,
+.image-swap-gallery:focus .tile-bl { bottom: var(--gap); left: var(--gap); top: auto; transform: none; opacity: 1; }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .image-swap-gallery { max-width: 80%; }
+  .image-swap-gallery { --tile-size: 27%; --gap: 10px; }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .image-swap-gallery { max-width: 92%; }
+  .image-swap-gallery { --tile-size: 28%; --gap: 10px; }
+}
+
+/* Reduced motion: remove crossfades and transforms */
+@media (prefers-reduced-motion: reduce) {
+  .image-swap-gallery > img.is-base { transition: opacity 0.01s linear; }
+  .image-swap-gallery .tile { transition: opacity 160ms ease-out; }
+  .image-swap-gallery:hover > img.is-base,
+  .image-swap-gallery:focus-within > img.is-base,
+  .image-swap-gallery:focus > img.is-base { opacity: 0.6; }
+  /* Reduced motion: place tiles at corners; just fade */
+  .image-swap-gallery .tile-tl { top: var(--gap); left: var(--gap); transform: none; opacity: 0; }
+  .image-swap-gallery .tile-tr { top: var(--gap); right: var(--gap); left: auto; transform: none; opacity: 0; }
+  .image-swap-gallery .tile-br { bottom: var(--gap); right: var(--gap); top: auto; left: auto; transform: none; opacity: 0; }
+  .image-swap-gallery .tile-bl { bottom: var(--gap); left: var(--gap); top: auto; transform: none; opacity: 0; }
+  .image-swap-gallery:hover .tile,
+  .image-swap-gallery:focus-within .tile,
+  .image-swap-gallery:focus .tile { opacity: 1; }
+}
+
+/* Touch devices (no hover): show tiles by default */
+@media (hover: none) {
+  .image-swap-gallery > img.is-base { opacity: 0.6; }
+  .image-swap-gallery .tile { opacity: 1; transform: none; }
+  .image-swap-gallery .tile-tl { top: var(--gap); left: var(--gap); }
+  .image-swap-gallery .tile-tr { top: var(--gap); right: var(--gap); left: auto; }
+  .image-swap-gallery .tile-br { bottom: var(--gap); right: var(--gap); top: auto; left: auto; }
+  .image-swap-gallery .tile-bl { bottom: var(--gap); left: var(--gap); top: auto; }
+}

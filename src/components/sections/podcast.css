@@ -1,0 +1,125 @@
+.podcasts {
+  position: relative;
+  background: linear-gradient(180deg, #050510 0%, #090D17 50%, #0B0F18 100%);
+  color: #ffffff;
+}
+
+.podcasts__inner {
+  width: min(1120px, 92vw);
+  margin: 0 auto;
+  padding-block: clamp(48px, 9vw, 80px); /* ~py-12 mobile → py-20 desktop */
+}
+
+.podcasts__header { text-align: center; margin-bottom: clamp(20px, 4vw, 34px); }
+.podcasts__title {
+  margin: 8px 0 0 0;
+  font-family: "Orbitron", "Rajdhani", "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 700;
+  font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.1;
+  letter-spacing: 0.02em; /* +2% */
+  text-shadow: 0 0 16px rgba(34, 211, 238, 0.35), 0 0 26px rgba(217, 70, 239, 0.22);
+}
+.podcasts__eyebrow {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.podcasts__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3.2vw, 32px);
+}
+@media (max-width: 639px) {
+  .podcasts__grid { grid-template-columns: 1fr; }
+}
+
+.pod-card {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: clamp(8px, 2vw, 12px) 0;
+  background: transparent;
+}
+
+.pod-card__hook {
+  margin: 6px 0 0 0;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 500;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(230, 241, 255, 0.88);
+  text-align: center;
+}
+
+
+/* Wormhole portal */
+.pod-portal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: clamp(180px, 28vw, 280px);
+  height: clamp(180px, 28vw, 280px);
+  aspect-ratio: 1 / 1;
+  border-radius: 999px;
+  overflow: hidden;
+  text-decoration: none;
+  transform: scale(0.8);
+  opacity: 0;
+  will-change: transform, opacity;
+  transition: transform 280ms ease-out, opacity 260ms ease-out, box-shadow 200ms ease-out, filter 200ms ease-out;
+  box-shadow:
+    0 0 40px rgba(34, 211, 238, 0.15),
+    0 0 60px rgba(217, 70, 239, 0.12);
+}
+.pod-portal::before {
+  content: "";
+  position: absolute;
+  inset: -12%;
+  border-radius: inherit;
+  background:
+    radial-gradient(60% 60% at 30% 30%, rgba(34,211,238,0.25), transparent 70%),
+    radial-gradient(60% 60% at 70% 70%, rgba(217,70,239,0.20), transparent 72%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+.pod-portal::after {
+  /* shimmer sweep */
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(34,211,238,0.0) 30%, rgba(34,211,238,0.25) 45%, rgba(217,70,239,0.25) 55%, rgba(217,70,239,0.0) 70%);
+  filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+}
+.pod-portal.inview { transform: scale(1); opacity: 1; }
+.pod-portal.inview::after { animation: portal-sweep 320ms ease-out both; }
+@keyframes portal-sweep {
+  0% { opacity: 0; transform: translateX(-40%); }
+  30% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(40%); }
+}
+.pod-portal img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0; transition: opacity 260ms ease-out; }
+.pod-portal.inview img { opacity: 1; }
+.pod-portal:hover { transform: scale(1.03); box-shadow: 0 0 50px rgba(34,211,238,0.22), 0 0 75px rgba(217,70,239,0.18); }
+.pod-portal:focus-visible { outline: 2px solid rgba(34,211,238,0.95); outline-offset: 3px; }
+.pod-portal:hover::before { filter: blur(30px) brightness(1.15); }
+
+.pod-portal__play { position: absolute; display: grid; place-items: center; width: 62px; height: 62px; pointer-events: none; }
+.pod-portal__play-ring { position: absolute; inset: 0; border-radius: 999px; box-shadow: 0 0 0 2px rgba(34,211,238,0.7); filter: blur(0.5px); transition: box-shadow 180ms ease-out, filter 180ms ease-out; }
+.pod-portal__play-triangle { width: 0; height: 0; margin-left: 3px; border-left: 14px solid rgba(255,255,255,0.95); border-top: 9px solid transparent; border-bottom: 9px solid transparent; filter: drop-shadow(0 0 8px rgba(34,211,238,0.35)); }
+.pod-portal:hover .pod-portal__play-ring { box-shadow: 0 0 0 3px rgba(34,211,238,0.95); filter: blur(0px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .pod-portal { transition: opacity 200ms ease-out; transform: none; }
+  .pod-portal.inview { opacity: 1; }
+  .pod-portal:hover { transform: none; }
+  .pod-portal::after { display: none; }
+  .pod-portal img { transition: opacity 200ms ease-out; }
+}
