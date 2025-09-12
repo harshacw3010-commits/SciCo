@@ -33,6 +33,7 @@
   z-index: 5; /* above background effects */
   margin-top: clamp(12px, 3.5vh, 28px);
   margin-bottom: clamp(18px, 5vh, 40px);
+  perspective: 800px;
 }
 
 .brand-wordmark__text {
@@ -45,34 +46,57 @@
   text-transform: uppercase;
   /* Base color and subtle gradient fill */
   color: #FFFFFF;
-  background: linear-gradient(180deg, #E0F7FF 0%, #22D3EE 85%);
+  background:
+    linear-gradient(180deg, #F2FDFF 0%, #5AE5FF 85%),
+    linear-gradient(120deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0) 60%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  /* Futuristic dual-glow: cyan outer, magenta subtle */
+  background-size: 100% 100%, 220% 100%;
+  background-position: 0% 0%, -120% 0%;
+  /* Brighter but crisp rim glow */
+  -webkit-text-stroke: 0.3px rgba(255,255,255,0.45);
   text-shadow:
-    0 0 14px rgba(34, 211, 238, 0.35),
-    0 0 20px rgba(217, 70, 239, 0.18);
+    0 0 2px rgba(255,255,255,0.9),
+    0 0 14px rgba(34, 211, 238, 0.42),
+    0 0 22px rgba(217, 70, 239, 0.28);
   transition: transform 200ms ease-out, text-shadow 200ms ease-out;
   will-change: transform, text-shadow;
 }
 
 /* Larger S and central C for symmetry */
-.brand-wordmark__letter { display: inline-block; }
+.brand-wordmark__letter { display: inline-block; will-change: transform, opacity, text-shadow; }
 .brand-wordmark__letter--accent { font-size: 1.12em; }
+
+/* Staggered pop for each letter */
+.brand-wordmark.is-ready .brand-wordmark__letter { animation: wordmark-pop 620ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+.brand-wordmark.is-ready .brand-wordmark__letter:nth-child(1) { animation-delay: 40ms; }
+.brand-wordmark.is-ready .brand-wordmark__letter:nth-child(2) { animation-delay: 120ms; }
+.brand-wordmark.is-ready .brand-wordmark__letter:nth-child(3) { animation-delay: 200ms; }
+.brand-wordmark.is-ready .brand-wordmark__letter:nth-child(4) { animation-delay: 280ms; }
+.brand-wordmark.is-ready .brand-wordmark__letter:nth-child(5) { animation-delay: 360ms; }
+
+@keyframes wordmark-pop {
+  0% { transform: translateY(10px) scale(0.975) rotateX(8deg); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: translateY(0) scale(1) rotateX(0deg); opacity: 1; }
+}
 
 .brand-wordmark:hover .brand-wordmark__text,
 .brand-wordmark:focus-within .brand-wordmark__text {
   transform: scale(1.03);
   text-shadow:
-    0 0 16px rgba(34, 211, 238, 0.40), /* ~+15% intensity */
-    0 0 22px rgba(217, 70, 239, 0.21);
+    0 0 3px rgba(255,255,255,1),
+    0 0 18px rgba(34, 211, 238, 0.55),
+    0 0 28px rgba(217, 70, 239, 0.38);
+  animation: wordmark-sheen 1200ms ease-out 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .brand-wordmark__text { transition: text-shadow 180ms ease-out; }
   .brand-wordmark:hover .brand-wordmark__text,
-  .brand-wordmark:focus-within .brand-wordmark__text { transform: none; }
+  .brand-wordmark:focus-within .brand-wordmark__text { transform: none; animation: none; }
+  .brand-wordmark__letter { animation: none; opacity: 1; transform: none; filter: none; }
 }
 
 /* Thin calligraphic underline as a gentle arc */
@@ -96,6 +120,13 @@
 @keyframes underline-pulse {
   0% { stroke-dashoffset: 0; }
   100% { stroke-dashoffset: -300; } /* move left → right visually */
+}
+
+/* Subtle sci-fi sheen across letters on hover */
+@keyframes wordmark-sheen {
+  0% { background-position: 0% 0%, -120% 0%; }
+  50% { background-position: 0% 0%, 20% 0%; }
+  100% { background-position: 0% 0%, 120% 0%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

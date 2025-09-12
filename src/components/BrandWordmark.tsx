@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 export type BrandWordmarkProps = {
   className?: string;
 };
 
 const BrandWordmark: React.FC<BrandWordmarkProps> = ({ className }) => {
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => { rootRef.current?.classList.add("is-ready"); }, []);
   // Render letters with accent sizing for "S" and the central "C"
   const letters = ["S", "C", "I", "C", "O"]; // display in full uppercase
   return (
-    <div className={("brand-wordmark " + (className ?? "")).trim()}>
+    <div ref={rootRef} className={("brand-wordmark " + (className ?? "")).trim()}>
       <h1 className="brand-wordmark__text" aria-label="SciCo brand wordmark">
         {letters.map((ch, i) => (
           <span

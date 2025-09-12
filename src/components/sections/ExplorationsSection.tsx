@@ -1,4 +1,5 @@
-import React, { KeyboardEvent, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import type { KeyboardEvent } from "react";
 import "./explorations.css";
 
 export type ExplorationsSectionProps = {
@@ -27,7 +28,7 @@ const ExplorationsSection: React.FC<ExplorationsSectionProps> = ({
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const youtubeHref = `https://www.youtube.com/watch?v=${museumVideoId}`;
-  const youtubeThumb = `https://img.youtube.com/vi/${museumVideoId}/hqdefault.jpg`;
+  const youtubeThumb = `https://img.youtube.com/vi/${museumVideoId}/maxresdefault.jpg`;
 
   const onMediaKeyDown = (e: KeyboardEvent<HTMLAnchorElement>) => {
     if (e.key === " " || e.key === "Spacebar") {
@@ -60,7 +61,15 @@ const ExplorationsSection: React.FC<ExplorationsSectionProps> = ({
               aria-label="Museum of Future — watch on YouTube"
               onKeyDown={onMediaKeyDown}
             >
-              <img src={youtubeThumb} alt="Museum of Future — watch on YouTube" />
+              <img
+                src={youtubeThumb}
+                alt="Museum of Future — watch on YouTube"
+                onError={(e) => {
+                  const img = e.currentTarget as HTMLImageElement;
+                  img.onerror = null;
+                  img.src = `https://img.youtube.com/vi/${museumVideoId}/hqdefault.jpg`;
+                }}
+              />
               <span className="expl-card__play" aria-hidden="true">
                 <span className="expl-card__play-ring" />
                 <span className="expl-card__play-triangle" />

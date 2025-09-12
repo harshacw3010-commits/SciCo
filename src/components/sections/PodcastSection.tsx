@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import "./podcast.css";
 
-export type PodcastItem = { id: string; hook: string };
+export type PodcastItem = { id: string; hook: string; url?: string };
 export type PodcastSectionProps = {
   items?: PodcastItem[];
   title?: string;
 };
 
 const PODCASTS: PodcastItem[] = [
-  { id: "<YOUTUBE_ID_1>", hook: "Obsession is a system, not a mood." },
-  { id: "<YOUTUBE_ID_2>", hook: "Curiosity beats talent—every day." },
-  { id: "<YOUTUBE_ID_3>", hook: "Science turns chaos into progress." },
-  { id: "<YOUTUBE_ID_4>", hook: "Better is built, not found." },
+  { id: "XaRM0id4v7I", url: "https://www.youtube.com/watch?v=XaRM0id4v7I&t=10s", hook: "Obsession is a system, not a mood." },
+  { id: "GQZFGUrYnK4", url: "https://www.youtube.com/watch?v=GQZFGUrYnK4", hook: "Curiosity beats talent—every day." },
+  { id: "FmF2i3ZtXIw", url: "https://www.youtube.com/watch?v=FmF2i3ZtXIw", hook: "Science turns chaos into progress." },
+  { id: "1pczzFcse7E", url: "https://www.youtube.com/watch?v=1pczzFcse7E&pp=0gcJCckJAYcqIYzv", hook: "Better is built, not found." },
 ];
 
 function usePrefersReducedMotion(): boolean {
@@ -42,12 +42,8 @@ const PodcastSection: React.FC<PodcastSectionProps> = ({
         for (const e of entries) {
           if (e.isIntersecting) {
             const el = e.target as HTMLElement;
-            // Mark card visible and trigger portal sweep on its anchor
+            // Mark card visible for entrance animation
             el.classList.add("inview");
-            const portal = el.querySelector<HTMLElement>(".pod-portal");
-            if (portal) {
-              portal.classList.add("inview");
-            }
             io.unobserve(el);
           }
         }
@@ -57,6 +53,26 @@ const PodcastSection: React.FC<PodcastSectionProps> = ({
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
   }, [prefersReducedMotion]);
+
+  const MAX_TILT = 10; // degrees
+  const handleMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (prefersReducedMotion) return;
+    const el = e.currentTarget as HTMLElement; // anchor
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const dx = (x / rect.width) * 2 - 1; // -1 .. 1
+    const dy = (y / rect.height) * 2 - 1;
+    const rx = (-dy * MAX_TILT).toFixed(2);
+    const ry = (dx * MAX_TILT).toFixed(2);
+    el.style.setProperty("--rx", `${rx}deg`);
+    el.style.setProperty("--ry", `${ry}deg`);
+  };
+  const handleLeave = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget as HTMLElement;
+    el.style.setProperty("--rx", `0deg`);
+    el.style.setProperty("--ry", `0deg`);
+  };
 
   return (
     <section id="podcasts" className="podcasts" aria-label="Podcasts">
@@ -68,28 +84,26 @@ const PodcastSection: React.FC<PodcastSectionProps> = ({
 
         <div className="podcasts__grid">
           {data.map((p, i) => {
-            const href = `https://www.youtube.com/watch?v=${p.id}`;
+            const href = p.url ?? `https://www.youtube.com/watch?v=${p.id}`;
             const thumb = `https://img.youtube.com/vi/${p.id}/hqdefault.jpg`;
             return (
               <article
                 key={p.id || i}
-                className="pod-card"
-                ref={(el) => (cardsRef.current[i] = el)}
+                className="holo-card"
+                ref={(el) => { cardsRef.current[i] = el; }}
               >
                 <a
-                  className="pod-portal"
+                  className="holo-card__media"
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Play podcast: ${p.hook}`}
+                  onMouseMove={handleMove}
+                  onMouseLeave={handleLeave}
                 >
                   <img src={thumb} alt="Podcast thumbnail" loading="lazy" />
-                  <span className="pod-portal__play" aria-hidden="true">
-                    <span className="pod-portal__play-ring" />
-                    <span className="pod-portal__play-triangle" />
-                  </span>
                 </a>
-                <p className="pod-card__hook">{p.hook}</p>
+                <p className="holo-card__hook">{p.hook}</p>
               </article>
             );
           })}

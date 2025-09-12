@@ -96,7 +96,7 @@
   will-change: transform, opacity;
   text-decoration: none;
 }
-.expl-card__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.expl-card__media img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .expl-card__media:hover {
   transform: scale(1.02);
   box-shadow:

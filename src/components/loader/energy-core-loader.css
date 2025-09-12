@@ -1,0 +1,75 @@
+.ecl { position: fixed; inset: 0; z-index: 7000; display: grid; place-items: center; opacity: 1; background: linear-gradient(180deg,#050510 0%,#090D17 50%,#0B0F18 100%); transition: opacity 320ms ease; 
+  /* Alignment variables */
+  --line-base: 28vh; /* baseline of letters from bottom */
+  --letter-h: 64px;  /* updated at runtime to letter font-size */
+}
+.ecl--out { opacity: 0; pointer-events: none; }
+
+/* Background circuits */
+.ecl-bg { position: absolute; inset: 0; opacity: 0; transition: opacity 260ms ease; }
+.ecl--bg-on .ecl-bg { opacity: 1; }
+.ecl-circuits { width: 100%; height: 100%; opacity: .08; transition: opacity 220ms ease; }
+.ecl--flash .ecl-circuits { opacity: .12; }
+.ecl-circuits path { animation: ecl-current 8s linear infinite; }
+@keyframes ecl-current { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -180; } }
+
+/* Stage / baseline */
+.ecl-stage { position: relative; height: min(46vh, 420px); }
+.ecl-ground { position: absolute; bottom: var(--line-base); left: 0; right: 0; height: 2px; background: linear-gradient(90deg, rgba(34,211,238,.35), rgba(217,70,239,.25)); opacity: .35; box-shadow: 0 0 18px rgba(34,211,238,.25), 0 0 24px rgba(217,70,239,.18); }
+
+/* Letters */
+.ecl-letters { position: absolute; bottom: var(--line-base); left: 0; right: 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 0; margin: 0; }
+.ecl-letters--center { justify-content: center; gap: 24px; }
+.ecl-letter { font-family: "Orbitron", "Rajdhani", "Poppins", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; font-weight: 700; font-size: clamp(44px,8vw,92px); color: #fff; letter-spacing: .02em; opacity: 0; transform: translateY(12px) scale(.98); filter: blur(6px); transition: opacity 220ms ease, transform 220ms ease, filter 220ms ease, text-shadow 220ms ease; text-shadow: none; position: relative; }
+.ecl-letter::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(34,211,238,.0), rgba(34,211,238,.12) 50%, rgba(217,70,239,.0)); opacity: 0; mask: linear-gradient(180deg, transparent 0%, black 100%); }
+.ecl-letter.is-on { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); text-shadow: 0 0 16px rgba(34,211,238,.26), 0 0 26px rgba(217,70,239,.18); }
+.ecl-letter.is-on::after { animation: ecl-scan 320ms ease-out 1; }
+@keyframes ecl-scan { 0% { opacity: .0; transform: translateY(100%);} 25% { opacity: .7; } 100% { opacity: 0; transform: translateY(-5%);} }
+.ecl-letter.is-from-core { animation: ecl-from-core 260ms ease-out 1; }
+/* Emerge upward from core center sitting on baseline */
+@keyframes ecl-from-core { 0% { transform: translate(0, -6px) scale(.94); opacity: .0; filter: blur(6px);} 60% { opacity: .9; } 100% { transform: translate(0,0) scale(1); opacity: 1; filter: blur(0);} }
+.ecl-letter--ghost { opacity: 0; visibility: hidden; }
+
+/* Core (O) */
+.ecl-core { position: absolute; bottom: calc(var(--line-base) + (var(--letter-h) / 2) - 32px); left: 0; transform: translate(0,0); will-change: transform; }
+.ecl-core__glow { position: absolute; inset: -28px; border-radius: 999px; background: radial-gradient(circle at 50% 50%, rgba(34,211,238,.38), rgba(217,70,239,.22) 60%, transparent 80%); filter: blur(28px); opacity: .9; pointer-events: none; }
+.ecl-core__inner { position: absolute; inset: 0; border-radius: 999px; background: radial-gradient(circle at 30% 30%, #FFFFFF, #22D3EE 45%, #1285A2 72%); box-shadow: 0 0 20px rgba(34,211,238,.35), 0 0 36px rgba(34,211,238,.22), inset 0 0 20px rgba(255,255,255,.08); }
+
+/* brief energy flash when spawning a letter */
+.ecl-core--emit .ecl-core__glow { filter: blur(32px) brightness(1.22); opacity: 1; }
+.ecl-core--emit .ecl-core__inner { box-shadow: 0 0 28px rgba(34,211,238,.45), 0 0 44px rgba(217,70,239,.28), inset 0 0 22px rgba(255,255,255,.12); }
+
+.ecl-core--squash .ecl-core__inner { animation: ecl-squash 140ms ease-out; }
+@keyframes ecl-squash { 0% { transform: scaleX(1.06) scaleY(.9); } 100% { transform: scaleX(1) scaleY(1); } }
+
+/* Morph into ring-like O */
+.ecl-core--as-o .ecl-core__inner { background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.95) 0%, #22D3EE 25%, rgba(34,211,238,.15) 43%, transparent 44%); box-shadow: 0 0 18px rgba(34,211,238,.35), 0 0 28px rgba(217,70,239,.22), inset 0 0 18px rgba(34,211,238,.35); }
+
+/* Pulse and ripple */
+.ecl-core__pulse { position: absolute; inset: 0; border-radius: 999px; box-shadow: 0 0 0 2px rgba(34,211,238,.0); pointer-events: none; }
+.ecl-core--pulse .ecl-core__pulse { animation: ecl-pulse 380ms ease-out 1; }
+@keyframes ecl-pulse { 0% { box-shadow: 0 0 0 0 rgba(34,211,238,.25); transform: scale(1);} 100% { box-shadow: 0 0 0 0 rgba(34,211,238,0); transform: scale(1.25);} }
+
+.ecl-core__wave { position: absolute; inset: -200vmax; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0); background: radial-gradient(circle at center, rgba(34,211,238,.25), rgba(217,70,239,.15) 26%, rgba(5,5,16,0) 60%); pointer-events: none; border-radius: 999px; }
+.ecl--ripple .ecl-core__wave { animation: ecl-wave 450ms ease-out forwards; }
+@keyframes ecl-wave { 0% { transform: translate(-50%,-50%) scale(0); opacity: .9; } 100% { transform: translate(-50%,-50%) scale(1); opacity: 0; } }
+
+/* Mini gravity ripples per letter */
+.ecl-mini { position: absolute; width: 2px; height: 2px; left: 0; border-radius: 999px; transform-origin: center; background: radial-gradient(circle at center, rgba(34,211,238,.25), rgba(217,70,239,.18) 40%, rgba(5,5,16,0) 70%); filter: blur(10px); animation: ecl-mini 480ms ease-out forwards; pointer-events: none; bottom: calc(var(--line-base) + (var(--letter-h) / 2)); }
+@keyframes ecl-mini { 0% { transform: translateX(var(--x,0)) scale(.2); opacity: .9; } 100% { transform: translateX(var(--x,0)) scale(10); opacity: 0; } }
+
+/* Reduced motion tweaks are handled in component by skipping movement */
+
+/* Portal aperture (Option B) */
+.ecl-portal { position: absolute; left: 50%; bottom: calc(var(--line-base) + (var(--letter-h)/2)); transform: translate(-50%, 50%) scale(.86); width: clamp(240px, 42vmin, 560px); height: clamp(240px, 42vmin, 560px); border-radius: 999px; opacity: 0; transition: transform 420ms ease, opacity 260ms ease; }
+.ecl-portal.is-open { opacity: 1; transform: translate(-50%, 50%) scale(1); }
+.ecl-ring { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+.ecl-ring--outer { box-shadow: 0 0 42px rgba(34,211,238,.25), 0 0 64px rgba(217,70,239,.20); border: 2px solid rgba(34,211,238,.25); filter: blur(2px); }
+.ecl-ring--inner { inset: 6%; box-shadow: 0 0 36px rgba(34,211,238,.28), 0 0 52px rgba(217,70,239,.22) inset; border: 1px solid rgba(217,70,239,.18); }
+.ecl-sheen { position: absolute; inset: -4px; border-radius: inherit; background: linear-gradient(110deg, rgba(34,211,238,0.0) 30%, rgba(34,211,238,0.35) 48%, rgba(217,70,239,0.30) 58%, rgba(217,70,239,0.0) 72%); filter: blur(8px); opacity: 0; animation: ecl-sheen 1200ms ease-out infinite; }
+@keyframes ecl-sheen { 0% { opacity: 0; transform: translateX(-120%);} 20% { opacity: .7; } 100% { opacity: 0; transform: translateX(120%);} }
+
+/* Screen ripple for outro */
+.ecl::after { content: ""; position: absolute; inset: -200vmax; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(0); background: radial-gradient(circle at center, rgba(34,211,238,.25), rgba(217,70,239,.15) 26%, rgba(5,5,16,0) 60%); border-radius: 999px; pointer-events: none; }
+.ecl--ripple::after { animation: ecl-wave 520ms ease-out forwards; }
+@keyframes ecl-wave { 0% { transform: translate(-50%,-50%) scale(0); opacity: .9; } 100% { transform: translate(-50%,-50%) scale(1); opacity: 0; } }
