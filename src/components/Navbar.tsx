@@ -18,7 +18,7 @@ function usePrefersReducedMotion(): boolean {
 }
 
 const LARGE_H = 64; // px
-const SMALL_H = 48; // px
+const SMALL_H = 64; // px (keep fixed height on scroll)
 const THRESHOLD = 80; // px
 
 const Navbar: React.FC<NavbarProps> = ({ className }) => {

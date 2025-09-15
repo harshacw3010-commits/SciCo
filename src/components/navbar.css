@@ -5,10 +5,12 @@
   width: 100%;
   z-index: 1000;
   height: 64px; /* shorter large state */
-  background: linear-gradient(135deg, rgba(5,5,16,0.88) 0%, rgba(5,5,16,0.85) 100%);
-  backdrop-filter: blur(6px) saturate(110%);
-  -webkit-backdrop-filter: blur(6px) saturate(110%);
-  transition: height 250ms ease-in-out, padding 250ms ease-in-out, transform 250ms ease-in-out, background-color 250ms ease-in-out;
+  background: rgba(6, 10, 20, 0.35);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 2px 18px rgba(0,0,0,0.25);
+  transition: height 250ms ease-in-out, padding 250ms ease-in-out, transform 250ms ease-in-out, background-color 250ms ease-in-out, backdrop-filter 250ms ease-in-out;
 }
 
 .navbar__inner {
@@ -41,7 +43,7 @@
 
 .navbar__nav ul { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(12px, 2.5vw, 28px); }
 .navbar__nav a {
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.88);
   text-decoration: none;
   font-weight: 600;
   font-size: clamp(13px, 1.5vw, 16px);
@@ -49,20 +51,31 @@
   letter-spacing: 0.02em;
   padding: 6px 8px; /* tighter vertical padding */
   border-radius: 8px;
-  transition: color 180ms ease, background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  transition: opacity 160ms ease, color 160ms ease, background-size 200ms ease;
+  /* elegant cyan underline */
+  background-image: linear-gradient(rgba(34,211,238,0.9), rgba(34,211,238,0.9));
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 2px;
 }
-.navbar__nav a:hover, .navbar__nav a:focus-visible {
+.navbar__nav a:hover {
   color: #fff;
-  background: rgba(34, 211, 238, 0.08);
-  box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+  opacity: 1;
+  background-size: 100% 2px;
+}
+.navbar__nav a:focus-visible {
+  outline: 2px solid rgba(34,211,238,0.65);
+  outline-offset: 2px;
+  color: #fff;
+  background-size: 100% 2px;
 }
 
-/* Shrink state */
+/* Shrink state (height unchanged for stability) */
 .navbar.navbar--shrink {
-  height: 48px; /* shorter compact state */
+  height: 64px;
 }
-.navbar.navbar--shrink .navbar__brand { transform: scale(0.85); }
-.navbar.navbar--shrink .navbar__nav a { font-size: clamp(12px, 1.3vw, 15px); }
+.navbar.navbar--shrink .navbar__brand { transform: none; }
+.navbar.navbar--shrink .navbar__nav a { font-size: clamp(13px, 1.5vw, 16px); }
 
 /* Reduced motion — snap between states */
 @media (prefers-reduced-motion: reduce) {

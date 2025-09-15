@@ -1,0 +1,11 @@
+/* Full-viewport fixed canvas behind content */
+.interactive-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Ensure sections appear above the background */
+.app-shell, .navbar { position: relative; z-index: 1; }
+

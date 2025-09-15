@@ -133,6 +133,72 @@
   .brand-wordmark__underline-path { animation: none; }
 }
 
+/* === Premium serif wordmark + tagline overrides === */
+.brand-wordmark { margin-bottom: clamp(14px, 3.5vh, 28px); }
+.brand-wordmark__underline { display: none !important; }
+
+.brand-wordmark__text {
+  /* EB Garamond per request */
+  font-family: "EB Garamond", ui-serif, Georgia, "Times New Roman", serif;
+  font-weight: 800;
+  font-size: clamp(56px, 8vw, 124px);
+  line-height: 1.02;
+  letter-spacing: 0.005em;
+  text-transform: none;
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-stroke: 0;
+  color: #ffffff !important;
+  text-shadow:
+    0 0 2px rgba(255,255,255,0.75),
+    0 0 14px rgba(54, 197, 240, 0.35),
+    0 10px 26px rgba(0, 0, 0, 0.35);
+}
+
+.brand-tagline { position: relative; margin: 8px 0 0 2px; display: inline-block; }
+.brand-tagline__text {
+  font-family: "Spectral", ui-serif, Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  font-size: clamp(16px, 2.2vw, 28px);
+  color: rgba(255,255,255,0.96);
+  letter-spacing: 0.01em;
+  filter: blur(0px);
+  text-shadow: 0 0 10px rgba(54, 197, 240, 0.18);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: tagline-reveal 1000ms ease-out forwards;
+  animation-delay: 300ms;
+}
+.brand-tagline__underline {
+  position: absolute;
+  left: 0; right: 0; height: 2px; margin-top: 6px;
+  background: linear-gradient(90deg, rgba(54,197,240,0.0), rgba(54,197,240,0.65), rgba(54,197,240,0.0));
+  opacity: 0; transform: translateX(-20%);
+  animation: underline-wick 260ms ease-out forwards; animation-delay: 650ms;
+  border-radius: 2px; pointer-events: none;
+}
+@keyframes tagline-reveal {
+  0% { opacity: 0; transform: translateY(20px); filter: blur(6px); letter-spacing: 0.03em; }
+  70% { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); letter-spacing: 0.01em; }
+}
+@keyframes underline-wick {
+  0% { opacity: 0; transform: translateX(-20%); }
+  20% { opacity: 1; }
+  100% { opacity: 0.9; transform: translateX(0); }
+}
+@media (max-width: 640px) { .brand-tagline__text { font-size: clamp(14px, 4vw, 18px); } }
+@media (max-width: 420px) { .brand-tagline { display: none; } }
+@media (prefers-reduced-motion: reduce) { .brand-tagline__text, .brand-tagline__underline { animation: none; opacity: 1; transform: none; filter: none; } }
+
+/* Neutralize prior hover sheen to keep premium, calm style */
+.brand-wordmark:hover .brand-wordmark__text,
+.brand-wordmark:focus-within .brand-wordmark__text {
+  transform: none !important;
+  animation: none !important;
+}
+
 /* Top-right navigation */
 .scico-nav {
   position: fixed;
